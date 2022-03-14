@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+  <title>Teloi代码示例集合</title>
+  <script src="./scripts/rxjs/6.5.2/rxjs.umd.min.js"></script>
+  <script src="./scripts/vue.min.js"></script>
+  <script src="./scripts/pako.min.js"></script>
+  <script src="./scripts/zip.js"></script>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .CodeMirror {
+      border: 0px solid #000;
+      font-size: 11pt;
+      font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, monospace;
+      height: 100%;
+    }
+
+    a:link {
+      color: #CCC;
+    }
+
+    a:visited {
+      color: #CCC;
+    }
+
+    a:hover {
+      color: #CCC;
+    }
+
+    a:active {
+      color: #CCC;
+    }
+
+    #exampleList {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 190px;
+      height: 100%;
+      white-space: nowrap;
+      background: #151718;
+      padding: 5px;
+      overflow: scroll;
+    }
+
+    #codeEditor {
+      position: absolute;
+      width: calc(50% - 100px);
+      background: #151718;
+      height: 100%;
+      left: 200px;
+      top: 0px;
+      /* cursor: w-resize; */
+    }
+
+    #earthWin {
+      position: absolute;
+      width: calc(50% - 100px);
+      background: #151718;
+      height: 100%;
+      right: 0px;
+      top: 0px;
+    }
+
+    .exampleList {
+      width: 0px !important;
+      display: none !important;
+    }
+
+    .codeEditor {
+      width: 50% !important;
+      left: 0px !important;
+    }
+
+    .earthWin {
+      width: 50% !important;
+    }
+
+    body .enlargecode {
+      width: 100% !important;
+      left: 0px !important;
+      z-index: 99 !important;
+    }
+
+    body .enlargeearth {
+      width: 100% !important;
+      left: 0px !important;
+      z-index: 99 !important;
+    }
+
+    body #vueApp .menuenlarg {
+      width: calc(100% - 200px) !important;
+      left: 200px !important;
+      z-index: 99 !important;
+    }
+
+    /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+      /* background-color: #001c35; */
+      background-color: rgb(30, 30, 30);
+    }
+
+    /*定义滚动条轨道 内阴影+圆角*/
+    ::-webkit-scrollbar-track {
+      /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            background-color: #001c35; */
+      background-color: rgb(30, 30, 30);
+    }
+
+    /*定义滑块 内阴影+圆角*/
+    ::-webkit-scrollbar-thumb {
+      /* border-radius: 3px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+            background-color: #3f78d1; */
+      background-color: hsla(0, 0%, 47%, .4);
+    }
+
+    .sclbtn {
+      position: absolute;
+      right: 20px;
+      top: 2.5px;
+      width: 25px;
+      height: 25px;
+      background-size: cover;
+      cursor: pointer;
+    }
+
+    .enlarge {
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAA4VJREFUSEvtll1MFFcUx//3DrPACrEh1iIFqV1g7s7WF1ohRILYklqxadPYh8bPB5voi4kaNWn7Yh+qiSVtoy+aaOJHbPrQpul3UammhaTYgk2F2R0+gnyoQA2pERbZ5c5t7iyLlF12GJvoQ51kcu9kzjm/e849955D8Ige8oi4eAxOiLwQghqG4fV4PJnRaNSrKEom59xLKc2UwpZljSuKEuacj6uqGo5EIuO6rocJIVaqbZwz1B0dHTWc89cIITsfJA+EEEcVRfm6pKTkYjL9pGDTNDcLIc7EFSKRKEZHwxgdC+OuHKde+T8ry2u/2XJcEJt7POo0ixCyRdO0s7PhScGhUKgewMs/1Deis7sfXd19rpwu8i1Fsa8Aa9dUSr3zjLE1jmC5p6Zpcil48PBJDA7ddgWNC+c+tQjv7t9mf2qapsze8wSP29vbsxRFuSvDu/edj2xFq7QMyFkEjI0BE+OgrVfmtZi6Q3vssHPOswOBwOhMpQRwZ2fnk5zz4ZGROzjwwbEYuKYWovBZe07+HgH94tN5gQ+8twM5OQuhKMri4uLiv1KCDcMopJRe7+u/hbpPYvllVayC0JcDk5MgLb+Ctv0xL/DeXVuwtGCJPHLP6LremxJsmiYTQgTbg904fuLz+6FeVgSYBkR5JehPP4L0dDnCt7/9JgJ+Hwghfk3TQk4el1JKW5p/u4Zzn32fYFwsK4L14iug330JMngjJXzjW7UoX7Fcevy8ruutKcGhUGglgMaGS8346tvLSQ2L3Kdj++0Afv3Vary0ulyKVjLGmv4zOG7AaQGuwIZhpAz1zFVLsLXuDdCmyyChtoToxEPNOS8NBAJXXSdXqo0U7DlYK6tBjD+BvHygp2v6nMeTCwBjjJlOyZVwnJzS16qogijRgbQ0kI4g6C8Ntkr8OKmqWujz+f51787rAnEEr98A8UROLOEGekHrv7Hnri6QZFemI7i0DMS7AMLrBfp6Qaf229WVObNIfPjxafQPDDpxk/4vyM/Fvt1bIYQYYozlORYJaSUYDB6RDYAsi5d+/h337k24gmdkpGN11QvxsljHGNs320DSeiy7D8uyLkhhWfQHbg5jYiICWbGi0cnpUf5X1TS7AsXH9HQP8vMW2w2BfBhjSRlztj5TXcgm2RC4cjcmfF0I8b7f7z81l65je/vQm70H8NKViqPHrqy5EP7/gf8BgoqqLv1QHe0AAAAASUVORK5CYII=");
+    }
+
+    .reduce {
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAA4VJREFUSEvtll1MFFcUx//3DrPACrEh1iIFqV1g7s7WF1ohRILYklqxadPYh8bPB5voi4kaNWn7Yh+qiSVtoy+aaOJHbPrQpul3UammhaTYgk2F2R0+gnyoQA2pERbZ5c5t7iyLlF12GJvoQ51kcu9kzjm/e849955D8Ige8oi4eAxOiLwQghqG4fV4PJnRaNSrKEom59xLKc2UwpZljSuKEuacj6uqGo5EIuO6rocJIVaqbZwz1B0dHTWc89cIITsfJA+EEEcVRfm6pKTkYjL9pGDTNDcLIc7EFSKRKEZHwxgdC+OuHKde+T8ry2u/2XJcEJt7POo0ixCyRdO0s7PhScGhUKgewMs/1Deis7sfXd19rpwu8i1Fsa8Aa9dUSr3zjLE1jmC5p6Zpcil48PBJDA7ddgWNC+c+tQjv7t9mf2qapsze8wSP29vbsxRFuSvDu/edj2xFq7QMyFkEjI0BE+OgrVfmtZi6Q3vssHPOswOBwOhMpQRwZ2fnk5zz4ZGROzjwwbEYuKYWovBZe07+HgH94tN5gQ+8twM5OQuhKMri4uLiv1KCDcMopJRe7+u/hbpPYvllVayC0JcDk5MgLb+Ctv0xL/DeXVuwtGCJPHLP6LremxJsmiYTQgTbg904fuLz+6FeVgSYBkR5JehPP4L0dDnCt7/9JgJ+Hwghfk3TQk4el1JKW5p/u4Zzn32fYFwsK4L14iug330JMngjJXzjW7UoX7Fcevy8ruutKcGhUGglgMaGS8346tvLSQ2L3Kdj++0Afv3Vary0ulyKVjLGmv4zOG7AaQGuwIZhpAz1zFVLsLXuDdCmyyChtoToxEPNOS8NBAJXXSdXqo0U7DlYK6tBjD+BvHygp2v6nMeTCwBjjJlOyZVwnJzS16qogijRgbQ0kI4g6C8Ntkr8OKmqWujz+f51787rAnEEr98A8UROLOEGekHrv7Hnri6QZFemI7i0DMS7AMLrBfp6Qaf229WVObNIfPjxafQPDDpxk/4vyM/Fvt1bIYQYYozlORYJaSUYDB6RDYAsi5d+/h337k24gmdkpGN11QvxsljHGNs320DSeiy7D8uyLkhhWfQHbg5jYiICWbGi0cnpUf5X1TS7AsXH9HQP8vMW2w2BfBhjSRlztj5TXcgm2RC4cjcmfF0I8b7f7z81l65je/vQm70H8NKViqPHrqy5EP7/gf8BgoqqLv1QHe0AAAAASUVORK5CYII=") !important;
+    }
+
+    .menu {
+      position: absolute;
+      left: 20px;
+      top: 2.5px;
+      width: 25px;
+      height: 25px;
+      background-size: cover;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAA4VJREFUSEvtll1MFFcUx//3DrPACrEh1iIFqV1g7s7WF1ohRILYklqxadPYh8bPB5voi4kaNWn7Yh+qiSVtoy+aaOJHbPrQpul3UammhaTYgk2F2R0+gnyoQA2pERbZ5c5t7iyLlF12GJvoQ51kcu9kzjm/e849955D8Ige8oi4eAxOiLwQghqG4fV4PJnRaNSrKEom59xLKc2UwpZljSuKEuacj6uqGo5EIuO6rocJIVaqbZwz1B0dHTWc89cIITsfJA+EEEcVRfm6pKTkYjL9pGDTNDcLIc7EFSKRKEZHwxgdC+OuHKde+T8ry2u/2XJcEJt7POo0ixCyRdO0s7PhScGhUKgewMs/1Deis7sfXd19rpwu8i1Fsa8Aa9dUSr3zjLE1jmC5p6Zpcil48PBJDA7ddgWNC+c+tQjv7t9mf2qapsze8wSP29vbsxRFuSvDu/edj2xFq7QMyFkEjI0BE+OgrVfmtZi6Q3vssHPOswOBwOhMpQRwZ2fnk5zz4ZGROzjwwbEYuKYWovBZe07+HgH94tN5gQ+8twM5OQuhKMri4uLiv1KCDcMopJRe7+u/hbpPYvllVayC0JcDk5MgLb+Ctv0xL/DeXVuwtGCJPHLP6LremxJsmiYTQgTbg904fuLz+6FeVgSYBkR5JehPP4L0dDnCt7/9JgJ+Hwghfk3TQk4el1JKW5p/u4Zzn32fYFwsK4L14iug330JMngjJXzjW7UoX7Fcevy8ruutKcGhUGglgMaGS8346tvLSQ2L3Kdj++0Afv3Vary0ulyKVjLGmv4zOG7AaQGuwIZhpAz1zFVLsLXuDdCmyyChtoToxEPNOS8NBAJXXSdXqo0U7DlYK6tBjD+BvHygp2v6nMeTCwBjjJlOyZVwnJzS16qogijRgbQ0kI4g6C8Ntkr8OKmqWujz+f51787rAnEEr98A8UROLOEGekHrv7Hnri6QZFemI7i0DMS7AMLrBfp6Qaf229WVObNIfPjxafQPDDpxk/4vyM/Fvt1bIYQYYozlORYJaSUYDB6RDYAsi5d+/h337k24gmdkpGN11QvxsljHGNs320DSeiy7D8uyLkhhWfQHbg5jYiICWbGi0cnpUf5X1TS7AsXH9HQP8vMW2w2BfBhjSRlztj5TXcgm2RC4cjcmfF0I8b7f7z81l65je/vQm70H8NKViqPHrqy5EP7/gf8BgoqqLv1QHe0AAAAASUVORK5CYII=") !important;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="vueApp" style="position: relative; width: 100%; height: 100%; overflow: hidden; color: #CCC;">
+    <div id="exampleList" :class="{'exampleList':menu===false}">
+      <a href="//github.com/teloi">
+        <h2>Teloi示例集</h2>
+      </a>
+      <template v-for="group in examples">
+        <h3 style="color:aqua">{{ group.title }}</h3>
+        <template v-for="e in group.list">
+          <a class="elink" :href="e.url" @click.prevent="setCodeFromUrl(e.url)" :title="e.title">{{ e.title }}</a><br />
+        </template>
+      </template>
+    </div>
+
+    <div id="codeEditor" :class="{'codeEditor':menu===false,'enlargecode':scl,'menuenlarg':menu&scl}">
+      <div
+        style="height: 30px; line-height: 30px; padding-left: 8px; background: #151718; color: #CCC; position: relative;">
+        <span @click="changemenu" class="menu"></span>
+        <input type="checkbox" v-model="autoRefresh" style="margin-left: 50px;" title="代码修改后2s自动刷新右侧的三维窗口">自动运行</button>
+        <button @click="apply" title="" style="background-color: transparent;
+        color: white;
+        font-size: 10px;">刷新</button>
+        <button @click="showCodeUrl" title="分享" style="background-color: transparent;
+        color: white;
+        font-size: 10px;">分享</button>
+        <div style="height: 30px; line-height: 30px; position: absolute; right: 70px; top: 0px; padding-right: 8px;">
+          <span>{{ title }}</span>
+        </div>
+        <span @click="sclcontrl" class="sclbtn enlarge" :class="{'reduce':scl}"></span>
+      </div>
+      <code-editor v-model="code" style="width: 100%; height: calc(100% - 30px);"></code-editor>
+    </div>
+
+    <div id="earthWin" :class="{'earthWin':menu===false,'enlargeearth':reduce}">
+      <iframe ref="earthAppFrame" src="./page-css/css-gray-background.html" frameborder="0"
+        style="width:100%; height: 100%; position: relative; background: rgb(255, 255, 255)"></iframe>
+      <span @click="reducecontrl" class="sclbtn enlarge" :class="{'reduce':reduce}"></span>
+    </div>
+  </div>
+
+  <script src="./scripts/codeEditor.js"></script>
+  <script type="text/javascript">
+    document.write("<script type='text/javascript' src='./scripts/list.js?v=" + Math.random() + "'></s" + "cript>");
+  </script>
+  <!-- <script src='./scripts/list.js'></script> -->
+  <script src="./scripts/axios.min.js"></script>
+  <script>var require = { paths: { 'vs': './scripts/monacoeditor/vs' } };</script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="./scripts/monacoeditor/vs/editor/editor.main.css">
+  <script src="./scripts/monacoeditor/vs/loader.js"></script>
+  <script src="./scripts/monacoeditor/vs/editor/editor.main.nls.js"></script>
+  <script src="./scripts/monacoeditor/vs/editor/editor.main.js"></script>
+  <script>
+    var q = {};
+    location.search.replace(/([^?&=]+)=([^&]+)/g, (_, k, v) => q[k] = v);
+    if (q.url) {
+      vueApp.setCodeFromUrl(q.url);
+    } else if (q.code) {
+      const decode = decodeURIComponent(q.code);
+      const jsonStr = base64ToString(decode);
+      const json = JSON.parse(jsonStr);
+      vueApp.code = json.code;
+    } else {
+      vueApp.setCodeFromUrl('./page-css/css-gray-background.html');
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<xmp>
+### 用两个栈实现队列
+
+- 题目
+
+用两个栈实现一个队列。队列的声明如下，请实现它的两个函数 appendTail 和 deleteHead ，分别完成在队列尾部插入整数和在队列头部删除整数的功能。(若队列中没有元素，deleteHead 操作返回 -1 )
+
+- 解答
+
+``` code
+class CQueue {
+    public listA;
+    public listB;
+
+    constructor() {
+        this.listA = [];
+        this.listB = [];
+    }
+
+    appendTail(value: number): void {
+        this.listA.push(value);
+        return;
+    }
+
+    deleteHead(): number {
+        if (!(this.listA.length || this.listB.length)) {
+            return -1;
+        }
+
+        if (!this.listB.length) {
+            while (this.listA.length) {
+                const temp = this.listA.pop();
+                this.listB.push(temp);
+            }
+        }
+        return this.listB.pop();
+    }
+}
+```
+
+
+- 知识点
+栈(Stack)：后进先出（LIFO-last in first out）:最后插入的元素最先出来。
+队列(Queue)：先进先出（FIFO-first in first out）:最先插入的元素最先出来。
+
+JavaScript的数组是一个拥有堆栈和队列自身优点的global对象。也就是说JavaScript数组可以表现的像栈(LIFO)和队列(FIFO)一样操作。这也是JavaScript数组强大的可操作性的体现
+
+队列
+push() 向数组末端添加数组项
+shift() 移除数组中的第一个项并返回该项，同时将数组长度减1
+
+栈
+unshift() 数组的前端添加数组项
+pop() 数组末端移除数组项
+</xmp>

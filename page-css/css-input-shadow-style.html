@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  </meta>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+  <title>凹陷风格输入框</title>
+  <!-- 0 引入js文件 -->
+  <style>
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+      background-color: #ebecf0;
+    }
+
+    /* 输入框 */
+
+    .shaow-input {
+      margin: 20px;
+      width: 300px;
+      border: 0;
+      outline: 0;
+      font-size: 16px;
+      border-radius: 320px;
+      padding: 16px;
+      background-color: #ebecf0;
+      text-shadow: 1px 1px 0 #fff;
+
+      /* styles */
+      /* margin-right: $ruler/2; */
+      box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #fff;
+      box-sizing: border-box;
+      transition: all 0.2s ease-in-out;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .shaow-input:focus {
+      box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+    }
+
+
+    /* 按钮 */
+    .red-button {
+      margin: 20px;
+      width: 300px;
+      border: 0;
+      outline: 0;
+      font-size: 16px;
+      border-radius: 320px;
+      padding: 16px;
+      background-color: #ebecf0;
+      text-shadow: 1px 1px 0 #fff;
+
+      /* styles */
+
+      color: #61677c;
+      font-weight: bold;
+      box-shadow: -5px -5px 20px #fff, 5px 5px 20px #babecc;
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .red-button:hover {
+      box-shadow: -2px -2px 5px #fff, 2px 2px 5px #babecc;
+    }
+
+    .red-button:active {
+      box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+    }
+
+    /* small button */
+    .unit {
+      border-radius: 8px;
+      line-height: 0;
+      width: 48px;
+      height: 48px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 8px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <input class="shaow-input" type="text" placeholder="Email Address">
+  <br>
+  <input class="shaow-input" type="text" placeholder="Password">  <button class="red-button unit" type="button">A</button>
+  <br>
+  <button class="red-button" type="button">Log in</button>
+  <button class="red-button unit" type="button">A</button>
+  <button class="red-button unit" type="button">B</button>
+  <button class="red-button unit" type="button">C</button>
+  <br>
+
+</body>
+
+</html>

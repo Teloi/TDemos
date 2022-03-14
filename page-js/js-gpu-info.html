@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  </meta>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+  
+  <title>获取当前设备gpu硬件信息</title>
+  <!-- 0 引入js文件 -->
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+      background-color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="agentInfo"></div>
+  <script>
+    const canvas = document.createElement('canvas');
+    const webgl = canvas.getContext('experimental-webgl');
+    const info = webgl.getExtension('WEBGL_debug_renderer_info');
+
+    const msg = webgl.getParameter(info.UNMASKED_RENDERER_WEBGL);
+    const divAgentInfo = document.getElementById('agentInfo');
+    divAgentInfo.innerHTML += (JSON && JSON.stringify ? JSON.stringify(msg) : msg) + '<br />';
+  </script>
+</body>
+
+</html>
