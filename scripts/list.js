@@ -56,6 +56,15 @@ vueApp.examples = [
     ]
   },
   {
+    "title": "C#",
+    "list": [
+      {
+        "title": "上传图片转Base64",
+        "url": "./page-c#/image-base64.html"
+      }
+    ]
+  },
+  {
     "title": "Demos",
     "list": [
     ]

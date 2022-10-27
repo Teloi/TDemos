@@ -1,0 +1,39 @@
+<xmp>
+public async Task<IDCardOCRResponse> IDCardOcr(IFormCollection form)
+  {
+      try
+      {
+          IFormFileCollection files = form.Files;
+          if (files.Count != 1)
+          {
+              throw new Exception("文件数量有误!");
+          }
+          else
+          {
+              IFormFile file = files.FirstOrDefault();
+              byte[] bytes;
+              using (var bodyStream = file.OpenReadStream())
+              {
+                  using (var m = new MemoryStream())
+                  {
+                      await bodyStream.CopyToAsync(m);
+                      bytes = m.ToArray();
+                  }
+              }
+              
+              string base64 = "data:image/png;base64," + Convert.ToBase64String(bytes);
+              if (!string.IsNullOrWhiteSpace(base64))
+              {
+                  // Demo 身份证识别
+                  return TencentCardOCR.CardOCR(base64, Configuration.GetSection("TencentSMS_SecretId").Value, Configuration.GetSection("TencentSMS_SecretKey").Value);
+              }
+          }
+
+          return null;
+      }
+      catch (Exception error)
+      {
+          throw new Exception(error.Message);
+      }
+  }
+</xmp>
