@@ -39,6 +39,10 @@ vueApp.examples = [
       {
         "title": "禁止缓存js-随机时间戳",
         "url": "./page-js/js-disable-cache.html"
+      },
+      {
+        "title": "ThreeJs Box",
+        "url": "./page-js/js-three-box.html"
       }
     ]
   },
